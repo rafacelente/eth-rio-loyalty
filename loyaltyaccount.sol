@@ -13,8 +13,6 @@ contract accountCreator is Ownable {
     mapping(address => uint) public holderToCpf;
     mapping(address => uint) public holderToPoints;
 
-
-
     function _createAccount(uint _cpf) {
         uint id = accounts.push(LoyaltyAccount(0, _cpf));
         cpfToHolder[cpf] = msg.sender;
@@ -23,6 +21,11 @@ contract accountCreator is Ownable {
     
     function getPoints(address _holder) external view returns (uint points) { 
         holderToPoints[_holder];
+    }
+
+    function addPoints(address _holder, uint points_added) public {
+        _cpf = holderToCpf[_holder];
+        accounts[_cpf].points += points_added; 
     }
 
     function 
