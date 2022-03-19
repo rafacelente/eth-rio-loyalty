@@ -5,7 +5,6 @@ contract accountCreator is Ownable {
     struct LoyaltyAccount {
         uint points;
         uint cpf;
-        address holder;
     }
 
 
@@ -14,7 +13,13 @@ contract accountCreator is Ownable {
     mapping(address => uint) public holderToCpf;
     mapping(address => uint) public holderToPoints;
 
-    
+
+
+    function _createAccount(uint _cpf) {
+        uint id = accounts.push(LoyaltyAccount(0, _cpf));
+        cpfToHolder[cpf] = msg.sender;
+        emit NewAccount(id, _cpf, 0);
+    }
     
     function getPoints(address _holder) external view returns (uint points) { 
         holderToPoints[_holder];
