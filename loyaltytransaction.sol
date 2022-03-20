@@ -1,4 +1,4 @@
-pragma solidity >=0.8.0<0.9.0;
+pragma solidity >=0.5.0<0.6.0;
 import "./loyaltyaccount.sol";
 
 contract LoyaltyTransaction is accountCreator {
@@ -24,7 +24,7 @@ contract LoyaltyTransaction is accountCreator {
         accounts[_cpf].points -= _pointsTaken;
     }
 
-    function collectReward (uint _cpf, uint _rewardPrice, string memory _reward) external {
+    function collectReward (uint _cpf, uint _rewardPrice, string calldata _reward) external {
         require (msg.sender == cpfToHolder[_cpf]);
         spendPoints (_cpf, _rewardPrice);
         emit newReward(_cpf, _reward);

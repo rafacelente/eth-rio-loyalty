@@ -1,48 +1,32 @@
-pragma solidity >=0.8.0<0.9.0;
+pragma solidity >=0.5.0<0.6.0;
+import "./loyaltyaccount.sol";
 
-contract accountCreator {
+contract LoyaltyTransaction is accountCreator {
 
-    event NewAccount (uint cpf, uint id, uint points);
-    event NewRestaurant (uint cnpj, uint id);
+    uint8 pointsPerHundredCoins = 10;
+    event newReward (uint cpf, string Reward);
 
-    
-    struct LoyaltyAccount {
-        string name;
-        uint points;
-        uint cpf;
+    modifier isRestaurant (uint _cnpj) {
+        require (msg.sender == cnpjToRestaurant[_cnpj]);
+        _;
     }
 
-    struct Restaurant {
-        string name;
-        uint cnpj;
+    function setPointPerCash (uint8 _newPointRule, uint _cnpj) external isRestaurant(_cnpj) { 
+        pointsPerHundredCoins = _newPointRule;
     }
 
-    LoyaltyAccount[] public accounts;
-    Restaurant[] public restaurants;
-    mapping(uint => address) public cpfToHolder;
-    mapping(address => uint) public holderToCpf;
-    mapping(address => uint) public holderToPoints;
-    mapping(address => uint) public restaurantToCnpj;
-    mapping(uint => address) public cnpjToRestaurant;
-
-    function createAccount(string memory _name, uint _cpf) external {
-        uint id = accounts.push(LoyaltyAccount(_name, 0, _cpf)) - 1;
-        cpfToHolder[_cpf] = msg.sender;
-        emit NewAccount(id, _cpf, 0);
+    function sumPoints (uint _transactionValue, uint _cpf) external {
+        uint newPoints = pointsPerHundredCoins * _transactionValue / 100;
+        addPoints(_cpf, newPoints);
     }
 
-    function createRestaurant(string memory _name, uint _cnpj) external {
-        uint id = restaurants.push(Restaurant(_name, _cnpj)) - 1;
-        cnpjToRestaurant[_cnpj] = msg.sender;
-        emit NewRestaurant(id, _cnpj);
+    function spendPoints (uint _cpf, uint _pointsTaken) internal {
+        accounts[_cpf].points -= _pointsTaken;
     }
 
-    function getPoints(address _holder) external view returns (uint points) {
-        return holderToPoints[_holder];
+    function collectReward (uint _cpf, uint _rewardPrice, string calldata _reward) external {
+        require (msg.sender == cpfToHolder[_cpf]);
+        spendPoints (_cpf, _rewardPrice);
+        emit newReward(_cpf, _reward);
     }
-
-    function addPoints(uint _cpf, uint points_added) internal {
-        accounts[_cpf].points += points_added; 
-    }
-
 }
