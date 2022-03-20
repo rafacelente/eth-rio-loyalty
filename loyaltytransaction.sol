@@ -21,7 +21,8 @@ contract LoyaltyTransaction is accountCreator {
     }
 
     function spendPoints (uint _cpf, uint _pointsTaken) internal {
-        accounts[_cpf].points -= _pointsTaken;
+        uint _id = cpfToId[_cpf];
+        accounts[_id].points -= _pointsTaken;
     }
 
     function collectReward (uint _cpf, uint _rewardPrice, string calldata _reward) external {
