@@ -5,10 +5,10 @@
 A blockchain-based solution to loyalty programs. Hacked in Ethereum Rio 2022.
 
 Team:
-Rafael Celente
-Ayrton Iseri
-Lúcio Ramos
-Alexandre Bernat
+- Rafael Celente
+- Ayrton Iseri
+- Lúcio Ramos
+- Alexandre Bernat
 
 ## Build Setup
 
